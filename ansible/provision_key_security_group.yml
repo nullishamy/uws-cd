@@ -9,12 +9,6 @@
       aws_secret_key: '{{ vault_aws_secret_key }}'
       session_token: '{{ vault_aws_session_token }}'
   tasks:
-  - name: Delete EC2 Key if it exists
-    ec2_key:
-      name: "cw2_app_key"
-      region: us-east-1
-      state: absent
-
   - name: Create EC2 SSH key
     ec2_key:
       name: "cw2_app_key"
