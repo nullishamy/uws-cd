@@ -3,7 +3,11 @@
   connection: local
   vars_files:
     - ./secrets/aws-cli.yml
-  # variables to be used in the playbook - making it easier to change values
+  module_defaults:
+    group/aws:
+      aws_access_key: '{{ vault_aws_access_key }}'
+      aws_secret_key: '{{ vault_aws_secret_key }}'
+      session_token: '{{ vault_aws_session_token }}'
   vars:
     instance_name: coursework-2-running-app
     key_name: cw2_app_key
