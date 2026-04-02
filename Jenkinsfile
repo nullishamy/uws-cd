@@ -30,7 +30,9 @@ pipeline {
                 script {
                     sh """
                         cd ansible
-                        ansible-playbook ./provision_key_security_group.yml
+                        if [[ ! -f cw2_app_key.pem ]]; then
+                            ansible-playbook ./provision_key_security_group.yml
+                        fi
                         ansible-playbook ./provision_staging.yml
                     """
                 }
