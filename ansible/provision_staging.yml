@@ -16,7 +16,7 @@
     security_group: cw2_app_sg
     image_id: ami-0866a3c8686eaeeba
     region: us-east-1
-    duckdns_domain: 'uws-devops-arynf'
+    duckdns_domain: 'uws-devops-arynf-app'
 
   tasks:
     - name: Launch T2 small instance on EC2
