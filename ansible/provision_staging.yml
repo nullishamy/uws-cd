@@ -6,12 +6,12 @@
   # variables to be used in the playbook - making it easier to change values
   vars:
     instance_name: coursework-2-running-app
-    key_name: cw2-app-key
+    key_name: cw2_app_key
     instance_type: t2.small
-    security_group: cw2-app-sg
+    security_group: cw2_app_sg
     image_id: ami-0866a3c8686eaeeba
     region: us-east-1
-    ansible_ssh_private_key_file: cw2-app-key.pem
+    ansible_ssh_private_key_file: cw2_app_key.pem
     duckdns_domain: 'uws-devops-arynf'
 
   tasks:
@@ -25,17 +25,17 @@
         region: "{{ region }}"
         state: started
         wait: yes
-      register: cw2-app-instance
+      register: cw2_app_instance
 
     - name: Add new instance to host group via its public IP address
       add_host:
-        hostname: "{{ cw2-app-instance.instances[0].public_ip_address }}"
+        hostname: "{{ cw2_app_instance.instances[0].public_ip_address }}"
         groupname: ec2_staging
         ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 
     - name: Wait for SSH to come up
       wait_for:
-        host: "{{ cw2-app-instance.instances[0].public_ip_address }}"
+        host: "{{ cw2_app_instance.instances[0].public_ip_address }}"
         port: 22
         delay: 20
         timeout: 320
@@ -131,7 +131,7 @@
   tasks:
     - name: Get the EC2 IP from the previous stage
       set_fact:
-        ec2_ip: "{{ cw2-app-instance.instances[0].public_ip_address }}"
+        ec2_ip: "{{ cw2_app_instance.instances[0].public_ip_address }}"
 
     - name: Check what IP DuckDNS is pointing to
       # This waits until the DNS matches the EC2 IP

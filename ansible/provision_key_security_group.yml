@@ -11,25 +11,25 @@
   tasks:
   - name: Delete EC2 Key if it exists
     ec2_key:
-      name: "cw2-app-key"
+      name: "cw2_app_key"
       region: us-east-1
       state: absent
 
   - name: Create EC2 SSH key
     ec2_key:
-      name: "cw2-app-key"
+      name: "cw2_app_key"
       region: us-east-1
     register: ec2_key
 
   - name: Save EC2 SSH key to file
     copy:
       content: "{{ ec2_key.key.private_key }}"
-      dest: cw2-app-key.pem
+      dest: cw2_app_key.pem
       mode: 0600
 
   - name: Create Security Group for app instance
     ec2_group:
-      name: "cw2-app-sg"
+      name: "cw2_app_sg"
       description: EC2 VPC Security Group for App Servers
       region: us-east-1
       rules:
