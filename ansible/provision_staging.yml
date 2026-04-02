@@ -1,6 +1,8 @@
 - name: Stage 1 - Launch Staging EC2 Instance
   hosts: localhost
   connection: local
+  vars_files:
+    - ./secrets/aws-cli.yml
   # variables to be used in the playbook - making it easier to change values
   vars:
     instance_name: coursework-2-running-app

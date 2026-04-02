@@ -1,6 +1,8 @@
 - name: Provision SSH key and Security Groups for Staging EC2 Instance
   hosts: localhost
   connection: local
+  vars_files:
+    - ./secrets/aws-cli.yml
   module_defaults:
     group/aws:
       aws_access_key: '{{ vault_aws_access_key }}'
