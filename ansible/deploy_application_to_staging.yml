@@ -38,7 +38,6 @@
 - name: Deploy Application on app instance
   vars:
     ansible_user: ubuntu
-    ansible_ssh_private_key_file: cw2_app_key.pem
     group: ec2_staging
     app_version: "{{ lookup('env', 'APP_VERSION') }}"
   hosts: "{{ group }}"

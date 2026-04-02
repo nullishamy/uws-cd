@@ -49,9 +49,6 @@
   hosts: ec2_staging
   vars:
     ansible_user: ubuntu
-    ansible_ssh_private_key_file: cw2_app_key.pem
-
-    # Must respecify here because Ansibble doesn't inherit for some reason
     duckdns_domain: 'uws-devops-arynf-app'
   vars_files:
     - ./secrets/duck.yml
@@ -132,7 +129,6 @@
   hosts: localhost
   connection: local
   vars:
-    # Must respecify here because Ansibble doesn't inherit for some reason
     duckdns_domain: 'uws-devops-arynf-app'
   tasks:
     - name: Get the EC2 IP from the previous stage

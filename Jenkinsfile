@@ -29,15 +29,18 @@ pipeline {
         stage('Deploy VM') {
             steps {
                 script {
-                    sh """
-                        cd ansible
-                        if [[ ! -f cw2_app_key.pem ]]; then
-                            ansible-playbook ./provision_key_security_group.yml
-                        fi
-
-                        ansible-playbook ./provision_staging.yml
-                        ansible-playbook ./deploy_application_to_staging.yml
-                    """
+                     withCredentials([
+                        sshUserPrivateKey(
+                            credentialsId: "aws-ssh", 
+                            keyFileVariable: 'KEY_FILE'
+                        )
+                    ]) {
+                        sh '''
+                            cd ansible
+                            ansible-playbook ./provision_staging.yml --private-key $KEY_FILE
+                            ansible-playbook ./deploy_application_to_staging.yml --private-key $KEY_FILE
+                        '''
+                    }
                 }
             }
         }
