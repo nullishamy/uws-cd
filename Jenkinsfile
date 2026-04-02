@@ -12,8 +12,8 @@ pipeline {
     agent any
 
     environment {
-        // Application details
         APP_PORT = '80'
+        VAULT_PASSWORD = credentials('ansible-vault-pass')
     }
 
     stages {
