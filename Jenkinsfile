@@ -21,7 +21,6 @@ pipeline {
             steps {
                 script {
                     echo "Selected Docker image tag: ${params.IMAGE_TAG}"
-                    echo "VAULT PASSWORD ${env.VAULT_PASSWORD}"
                 }
             }
         }
@@ -30,7 +29,6 @@ pipeline {
             steps {
                 script {
                     sh """
-                        env
                         cd ansible
                         ansible-playbook ./provision_key_security_group.yml
                         ansible-playbook ./provision_staging.yml

@@ -7,6 +7,7 @@
     group/aws:
       aws_access_key: '{{ vault_aws_access_key }}'
       aws_secret_key: '{{ vault_aws_secret_key }}'
+      session_token: '{{ vault_aws_session_token }}'
   tasks:
   - name: Delete EC2 Key if it exists
     ec2_key:
