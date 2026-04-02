@@ -1,0 +1,11 @@
+services:
+  flask-app:
+    image: <PLACEHOLDER-REPOSITORY>/<PLACEHOLDER-IMAGE>:latest
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - flask-app
