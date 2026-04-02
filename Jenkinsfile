@@ -34,7 +34,7 @@ pipeline {
                         if [[ ! -f cw2_app_key.pem ]]; then
                             ansible-playbook ./provision_key_security_group.yml
                         fi
-                        
+
                         ansible-playbook ./provision_staging.yml
                         ansible-playbook ./deploy_application_to_staging.yml
                     """
@@ -45,13 +45,12 @@ pipeline {
         stage('Verify Application') {
             steps {
                 script {
-                    // Replace with your actual application URL
-                    def app_url = "http://${env.PUBLIC_IP}:${APP_PORT}"
+                    def app_url = "http://uws-devops-arynf-app.duckdns.org"
 
                     echo "Verifying application at ${app_url}"
 
                     // Wait for application to be ready
-                    sleep(time: 6, unit: 'SECONDS')
+                    sleep(time: 60, unit: 'SECONDS')
 
                     // Perform health check
                     sh """
