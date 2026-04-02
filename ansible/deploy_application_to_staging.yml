@@ -1,10 +1,18 @@
 - name: Ensure staging instances are running and inventory is updated
   hosts: localhost
   gather_facts: no
+  vars_files:
+    - ./secrets/aws-cli.yml
+    - ./secrets/duck.yml
+  module_defaults:
+    group/aws:
+      aws_access_key: '{{ vault_aws_access_key }}'
+      aws_secret_key: '{{ vault_aws_secret_key }}'
+      session_token: '{{ vault_aws_session_token }}'
   vars:
-    instance_name: Flask_Running_App_Staging
-    region: us-east-1
+    instance_name: coursework-2-running-app
     group: ec2_staging
+    region: us-east-1
 
   tasks:
     - name: Gather facts to check if the staging instance already exists
@@ -17,7 +25,7 @@
 
     - name: Fail if no running instances are found
       fail:
-        msg: "No running staging instances found. Please provision the staging environment."
+        msg: "No running staging instances found. Please provision the app vm."
       when: ec2_exists.instances | length == 0
 
     - name: Update inventory with dynamic public IPs
@@ -27,13 +35,13 @@
       loop: "{{ ec2_exists.instances }}"
       when: item.public_ip_address is defined
 
-- name: Deploy Application on Staging Instance
+- name: Deploy Application on app instance
   vars:
-    ansible_ssh_private_key_file: flask_running_app_staging_key.pem
-    remote_ec2_user: ubuntu
+    ansible_user: ubuntu
+    ansible_ssh_private_key_file: cw2_app_key.pem
     group: ec2_staging
+    app_version: "{{ lookup('env', 'APP_VERSION') }}"
   hosts: "{{ group }}"
-  remote_user: "{{ remote_ec2_user }}"
   become: yes
   become_method: sudo
 
@@ -53,21 +61,19 @@
         builder_cache: true
 
     - name: Copy docker-compose file from the parent directory
-      copy:
-        src: ../docker-compose-staging.yml
-        dest: /home/ubuntu/docker-compose-staging.yml
+      template:
+        src: ./docker-compose-staging.yml
+        dest: /home/ubuntu/docker-compose.yml
         mode: '0644'
 
     - name: Copy nginx config file
       copy:
-        src: ../nginx/
-        dest: /home/ubuntu/nginx/
+        src: ./nginx.conf
+        dest: /home/ubuntu/nginx.conf
         mode: '0644'
 
     - name: Start docker compose app
       community.docker.docker_compose_v2:
         project_src: /home/ubuntu
-        files:
-          - docker-compose-staging.yml
         state: present
         build: never

@@ -13,7 +13,7 @@ pipeline {
 
     environment {
         APP_PORT = '80'
-        APP_VERSION = params.IMAGE_TAG
+        APP_VERSION = "${params.IMAGE_TAG}"
         VAULT_PASSWORD = credentials('ansible-vault-pass')
     }
 
@@ -34,7 +34,9 @@ pipeline {
                         if [[ ! -f cw2_app_key.pem ]]; then
                             ansible-playbook ./provision_key_security_group.yml
                         fi
+                        
                         ansible-playbook ./provision_staging.yml
+                        ansible-playbook ./deploy_application_to_staging.yml
                     """
                 }
             }
