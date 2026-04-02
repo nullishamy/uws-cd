@@ -13,6 +13,7 @@ pipeline {
 
     environment {
         APP_PORT = '80'
+        APP_VERSION = params.IMAGE_TAG
         VAULT_PASSWORD = credentials('ansible-vault-pass')
     }
 

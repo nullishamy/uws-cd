@@ -50,12 +50,16 @@
   vars:
     ansible_user: ubuntu
     ansible_ssh_private_key_file: cw2_app_key.pem
+
+    # Must respecify here because Ansibble doesn't inherit for some reason
+    duckdns_domain: 'uws-devops-arynf-app'
+  vars_files:
+    - ./secrets/duck.yml
   become: yes
   become_method: sudo
 
   tasks:
-    # --------- Setup DuckDNS on the staging instance ---------
-    # Setup duckdns client to update the public IP address of the staging instance with the duckdns service
+    # --------- Setup DuckDNS on the app instance ---------
     - name: Ensure curl is installed
       become: yes
       package:
@@ -95,7 +99,7 @@
       debug:
         msg: "DuckDNS response: {{ duck_log_content['content'] | b64decode }}"
 
-    # --------- Install Docker on the staging instance ---------
+    # --------- Install Docker on the app instance ---------
     - name: Add the Docker GPG key
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
@@ -120,13 +124,16 @@
 
     - name: Add user to docker group
       user:
-        name: "{{ remote_ec2_user }}"
+        name: "{{ ansible_user }}"
         groups: docker
         append: yes
 
 - name: Stage 3 - Verify DuckDNS resolution from Localhost
   hosts: localhost
   connection: local
+  vars:
+    # Must respecify here because Ansibble doesn't inherit for some reason
+    duckdns_domain: 'uws-devops-arynf-app'
   tasks:
     - name: Get the EC2 IP from the previous stage
       set_fact:
