@@ -104,7 +104,7 @@
 
     - name: Add Docker Repository
       apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        repo: deb https://download.docker.com/linux/ubuntu noble stable
         state: present
 
     - name: Update apt packages and install docker-ce
